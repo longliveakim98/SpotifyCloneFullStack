@@ -1,10 +1,12 @@
-import React from "react";
 import Navbar from "./Navbar";
-import { albumsData, songsData } from "../assets/frontend-assets/assets";
+
 import AlbumItem from "./AlbumItem";
 import SongsItem from "./SongsItem";
+import { PlayerContext } from "../context/PlayerContext";
+import { useContext } from "react";
 
 const DisplayHome = () => {
+  const { songsData, albumsData } = useContext(PlayerContext);
   return (
     <>
       <Navbar />
@@ -17,7 +19,7 @@ const DisplayHome = () => {
               name={album.name}
               desc={album.desc}
               image={album.image}
-              id={album.id}
+              id={album._id}
             />
           ))}
         </div>
@@ -31,7 +33,7 @@ const DisplayHome = () => {
               name={song.name}
               desc={song.desc}
               image={song.image}
-              id={song.id}
+              id={song._id}
             />
           ))}
         </div>
