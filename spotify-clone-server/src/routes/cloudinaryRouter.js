@@ -3,6 +3,6 @@ import { getCloudinarySignature } from "../config/cloudinary.js";
 
 const cloudinaryRouter = express.Router();
 
-cloudinaryRouter.get("/api/cloudinary-signature", getCloudinarySignature);
+cloudinaryRouter.get("/", getCloudinarySignature);
 
 export default cloudinaryRouter;
