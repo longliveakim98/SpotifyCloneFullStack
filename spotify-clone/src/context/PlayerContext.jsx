@@ -8,12 +8,12 @@ const PlayerContextProvider = (props) => {
   const seekBg = useRef();
   const seekBar = useRef();
 
-  const url = "http://localhost:4000";
+  const url = import.meta.env.VITE_BASE_URL;
 
   const [songsData, setSongsData] = useState([]);
   const [albumsData, setAlbumsData] = useState([]);
 
-  const [track, setTrack] = useState(songsData[8]);
+  const [track, setTrack] = useState(songsData[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [time, setTime] = useState({
     currentTime: { second: 0, minute: 0 },
