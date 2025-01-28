@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddSong from "./pages/addSong";
-import AddAlbum from "./pages/addAlbum";
+import AddSong from "./pages/AddSong";
+import AddAlbum from "./pages/AddAlbum";
 import ListSong from "./pages/ListSong";
-import ListAlbum from "./pages/listAlbum";
+import ListAlbum from "./pages/ListAlbum";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/NavBar";
 
