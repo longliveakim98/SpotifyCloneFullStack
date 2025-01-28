@@ -30,7 +30,7 @@ const addSong = async (req, res) => {
       duration,
     };
 
-    const song = songModel(songData);
+    const song = new songModel(songData);
     await song.save();
 
     res.json({ success: true, message: "Song add successfully" });
@@ -52,7 +52,7 @@ const removeSong = async (req, res) => {
   try {
     await songModel.findByIdAndDelete(req.body.id);
     res.json({ success: true, message: "Song removed successfully" });
-  } catch (error) {
+  } catch (err) {
     res.json({ success: false, message: err.message });
   }
 };
