@@ -8,4 +8,17 @@ const connectCloudinary = async () => {
   });
 };
 
-export default connectCloudinary;
+const getCloudinarySignature = async (req, res) => {
+  const timestamp = Math.floor(Date.now() / 1000); // Current timestamp
+  const signature = cloudinary.utils.api_sign_request(
+    { timestamp },
+    process.env.CLOUDINARY_SECRET_KEY // Your secret key
+  );
+
+  res.json({
+    signature,
+    timestamp,
+  });
+};
+
+export { connectCloudinary, getCloudinarySignature };

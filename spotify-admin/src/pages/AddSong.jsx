@@ -13,6 +13,24 @@ const AddSong = () => {
   const [loading, setLoading] = useState(false);
   const [albumData, setAlbumData] = useState([]);
 
+  const [cloudinarySignature, setCloudinarySignature] = useState("");
+  const [timestamp, setTimestamp] = useState("");
+
+  useEffect(() => {
+    const getCloudinarySignature = async () => {
+      try {
+        const res = await axios.get(`${url}/api/cloudinary-signature`);
+        setCloudinarySignature(res.data.signature);
+        setTimestamp(res.data.timestamp);
+      } catch (error) {
+        console.error("Error getting Cloudinary signature", error);
+      }
+    };
+
+    getCloudinarySignature();
+    loadAlbums();
+  }, []);
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -23,6 +41,10 @@ const AddSong = () => {
       formData.append("image", imageFile);
       formData.append("audio", songFile);
       formData.append("album", album);
+
+      formData.append("signature", cloudinarySignature);
+      formData.append("timestamp", timestamp);
+      formData.append("upload_preset", "preset");
 
       const res = await axios.post(`${url}/api/song/add`, formData);
 
