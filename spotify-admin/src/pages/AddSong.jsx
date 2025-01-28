@@ -29,8 +29,8 @@ const AddSong = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const timestamp = Math.floor(Date.now() / 1000); // Generate fresh timestamp
-      const signature = await getCloudinarySignature(timestamp); // Fetch signature
+      const resCloud = await getCloudinarySignature();
+      const { signature, timestamp } = resCloud.data;
 
       const formData = new FormData();
       formData.append("name", name);

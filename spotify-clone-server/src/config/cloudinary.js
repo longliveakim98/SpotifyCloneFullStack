@@ -9,18 +9,16 @@ const connectCloudinary = async () => {
 };
 
 const getCloudinarySignature = (req, res) => {
-  const { timestamp } = req.query;
-
-  if (!timestamp) {
-    return res.status(400).json({ error: "Timestamp is required" });
-  }
-
+  const timestamp = Math.floor(Date.now() / 1000); // Current timestamp
   const signature = cloudinary.utils.api_sign_request(
     { timestamp },
     process.env.CLOUDINARY_SECRET_KEY
   );
 
-  res.json({ signature });
+  res.json({
+    signature,
+    timestamp, // Send this timestamp back to the frontend
+  });
 };
 
 export { connectCloudinary, getCloudinarySignature };
