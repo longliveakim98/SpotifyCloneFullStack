@@ -8,14 +8,19 @@ const connectCloudinary = async () => {
   });
 };
 
-const getCloudinarySignature = async (req, res) => {
-  try {
-    const res = await axios.get(`${url}/api/cloudinary-signature`);
-    return { signature: res.data.signature, timestamp: res.data.timestamp };
-  } catch (error) {
-    console.error("Error getting Cloudinary signature", error);
-    throw error;
+const getCloudinarySignature = (req, res) => {
+  const { timestamp } = req.query;
+
+  if (!timestamp) {
+    return res.status(400).json({ error: "Timestamp is required" });
   }
+
+  const signature = cloudinary.utils.api_sign_request(
+    { timestamp },
+    process.env.CLOUDINARY_SECRET_KEY
+  );
+
+  res.json({ signature });
 };
 
 export { connectCloudinary, getCloudinarySignature };

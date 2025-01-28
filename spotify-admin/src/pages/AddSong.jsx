@@ -13,16 +13,15 @@ const AddSong = () => {
   const [loading, setLoading] = useState(false);
   const [albumData, setAlbumData] = useState([]);
 
-  const [cloudinarySignature, setCloudinarySignature] = useState("");
-  const [timestamp, setTimestamp] = useState("");
-
-  const getCloudinarySignature = async () => {
+  const getCloudinarySignature = async (timestamp) => {
     try {
-      const res = await axios.get(`${url}/api/cloudinary-signature`);
-      setCloudinarySignature(res.data.signature);
-      setTimestamp(res.data.timestamp);
+      const res = await axios.get(`${url}/api/cloudinary-signature`, {
+        params: { timestamp }, // Pass the timestamp to the backend
+      });
+      return res.data.signature;
     } catch (error) {
       console.error("Error getting Cloudinary signature", error);
+      throw new Error("Unable to fetch signature");
     }
   };
 
@@ -30,7 +29,8 @@ const AddSong = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await getCloudinarySignature();
+      const timestamp = Math.floor(Date.now() / 1000); // Generate fresh timestamp
+      const signature = await getCloudinarySignature(timestamp); // Fetch signature
 
       const formData = new FormData();
       formData.append("name", name);
@@ -39,7 +39,7 @@ const AddSong = () => {
       formData.append("audio", songFile);
       formData.append("album", album);
 
-      formData.append("signature", cloudinarySignature);
+      formData.append("signature", signature);
       formData.append("timestamp", timestamp);
       formData.append("upload_preset", "preset");
 
