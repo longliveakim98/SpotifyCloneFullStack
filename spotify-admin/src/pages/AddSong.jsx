@@ -16,27 +16,22 @@ const AddSong = () => {
   const [cloudinarySignature, setCloudinarySignature] = useState("");
   const [timestamp, setTimestamp] = useState("");
 
-  useEffect(() => {
-    const getCloudinarySignature = async () => {
-      try {
-        const res = await axios.get(`${url}/api/cloudinary-signature`);
-        setCloudinarySignature(res.data.signature);
-        setTimestamp(res.data.timestamp);
-      } catch (error) {
-        console.error("Error getting Cloudinary signature", error);
-      }
-    };
-
-    getCloudinarySignature();
-    loadAlbums();
-  }, []);
-
-  console.log(cloudinarySignature, timestamp);
+  const getCloudinarySignature = async () => {
+    try {
+      const res = await axios.get(`${url}/api/cloudinary-signature`);
+      setCloudinarySignature(res.data.signature);
+      setTimestamp(res.data.timestamp);
+    } catch (error) {
+      console.error("Error getting Cloudinary signature", error);
+    }
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
+      getCloudinarySignature();
+
       const formData = new FormData();
       formData.append("name", name);
       formData.append("desc", desc);
