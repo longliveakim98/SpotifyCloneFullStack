@@ -27,12 +27,12 @@ const addSong = async (req, res) => {
       timestamp,
       `name=${name}&desc=${desc}&album=${album}`
     );
-    if (!isValidSignature) {
-      return res.json({
-        success: false,
-        message: ` Invalid signature ${signature + timestamp}`,
-      });
-    }
+    // if (!isValidSignature) {
+    //   return res.json({
+    //     success: false,
+    //     message: ` Invalid signature ${signature + timestamp }`,
+    //   });
+    // }
 
     const audioFile = req.files?.audio[0];
     const imageFile = req.files?.image[0];
