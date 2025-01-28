@@ -9,24 +9,13 @@ const connectCloudinary = async () => {
 };
 
 const getCloudinarySignature = async (req, res) => {
-  const timestamp = Math.round(new Date().getTime() / 1000); // Current timestamp
-
-  // Prepare the params that will be signed
-  const params = {
-    timestamp,
-    api_key: process.env.CLOUDINARY_API_KEY,
-  };
-
-  // Generate the signature using Cloudinary's utils method
-  const signature = cloudinary.utils.api_sign_request(
-    params,
-    process.env.CLOUDINARY_SECRET_KEY
-  );
-
-  res.json({
-    signature,
-    timestamp,
-  });
+  try {
+    const res = await axios.get(`${url}/api/cloudinary-signature`);
+    return { signature: res.data.signature, timestamp: res.data.timestamp };
+  } catch (error) {
+    console.error("Error getting Cloudinary signature", error);
+    throw error;
+  }
 };
 
 export { connectCloudinary, getCloudinarySignature };

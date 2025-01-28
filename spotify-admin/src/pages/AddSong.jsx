@@ -30,7 +30,7 @@ const AddSong = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      getCloudinarySignature();
+      await getCloudinarySignature();
 
       const formData = new FormData();
       formData.append("name", name);
