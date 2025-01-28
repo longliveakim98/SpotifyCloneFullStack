@@ -6,7 +6,7 @@ import AddAlbum from "./pages/AddAlbum";
 import ListSong from "./pages/ListSong";
 import ListAlbum from "./pages/ListAlbum";
 import Sidebar from "./components/Sidebar";
-import Navbar from "./components/NavBar";
+import Navbar from "./components/Navbar";
 
 export const url = import.meta.env.VITE_BASE_URL;
 
