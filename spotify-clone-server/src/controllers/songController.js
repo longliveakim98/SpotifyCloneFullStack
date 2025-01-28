@@ -1,11 +1,36 @@
 import { v2 as cloudinary } from "cloudinary";
 import songModel from "../models/songModel.js";
+import crypto from "crypto";
+
+const validateSignature = (signature, timestamp, params) => {
+  const secretKey = process.env.CLOUDINARY_API_SECRET; // Ensure you have the correct secret key in your environment variables
+
+  // Recreate the string to sign
+  const stringToSign = `timestamp=${timestamp}${params}`;
+
+  // Generate the expected signature using the Cloudinary secret key
+  const expectedSignature = crypto
+    .createHash("sha1")
+    .update(stringToSign + secretKey)
+    .digest("hex");
+
+  // Compare the expected signature with the signature passed from the frontend
+  return expectedSignature === signature;
+};
 
 const addSong = async (req, res) => {
   try {
-    const name = req.body.name;
-    const desc = req.body.desc;
-    const album = req.body.album;
+    const { name, desc, album, signature, timestamp } = req.body;
+
+    const isValidSignature = validateSignature(
+      signature,
+      timestamp,
+      `name=${name}&desc=${desc}&album=${album}`
+    );
+    if (!isValidSignature) {
+      return res.json({ success: false, message: "Invalid signature" });
+    }
+
     const audioFile = req.files?.audio[0];
     const imageFile = req.files?.image[0];
 

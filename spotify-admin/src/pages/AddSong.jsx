@@ -13,16 +13,10 @@ const AddSong = () => {
   const [loading, setLoading] = useState(false);
   const [albumData, setAlbumData] = useState([]);
 
-  const [cloudinarySignature, setCloudinarySignature] = useState("");
-  const [timestamp, setTimestamp] = useState("");
-
   const getCloudinarySignature = async () => {
     try {
       const res = await axios.get(`${url}/api/cloudinary-signature`);
       console.log("Cloudinary Signature Response:", res.data);
-
-      setCloudinarySignature(res.data.signature);
-      setTimestamp(res.data.timestamp);
 
       return res; // Make sure this returns the response
     } catch (error) {
