@@ -9,7 +9,7 @@ const connectCloudinary = async () => {
 };
 
 const getCloudinarySignature = async (req, res) => {
-  const timestamp = Math.floor(Date.now() / 1000); // Current timestamp
+  const timestamp = Math.round(new Date().getTime() / 1000); // Current timestamp
 
   // Prepare the params that will be signed
   const params = {

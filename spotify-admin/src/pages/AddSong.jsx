@@ -31,6 +31,8 @@ const AddSong = () => {
     loadAlbums();
   }, []);
 
+  console.log(cloudinarySignature, timestamp);
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
