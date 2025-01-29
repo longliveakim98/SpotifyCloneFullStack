@@ -43,7 +43,9 @@ const AddSong = () => {
       formData.append("timestamp", timestamp);
       formData.append("upload_preset", "preset");
 
-      const res = await axios.post(`${url}/api/song/add`, formData);
+      const res = await axios.post(`${url}/api/song/add`, formData, {
+        withCredentials: true,
+      });
 
       if (res.data.success) {
         toast.success("Song added successfully");
