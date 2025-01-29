@@ -15,7 +15,7 @@ const AddSong = () => {
 
   const getCloudinarySignature = async (name) => {
     const res = await axios.get(`/api/cloudinary-signature?name=${name}`);
-    const data = await res.json();
+    const data = await res.data;
     return data;
   };
 
