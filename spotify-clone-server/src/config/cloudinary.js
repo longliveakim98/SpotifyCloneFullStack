@@ -10,16 +10,22 @@ const connectCloudinary = async () => {
 };
 
 const getCloudinarySignature = (req, res) => {
-  const timestamp = Math.floor(Date.now() / 1000); // Current timestamp
+  const timestamp = Math.round(new Date().getTime() / 1000); // Current time in seconds
+
+  // Parameters to sign
+  const params = {
+    timestamp: timestamp,
+    public_id: req.query.name, // Pass the song name as the public_id
+  };
+
+  // Generate the signature
   const signature = cloudinary.utils.api_sign_request(
-    { timestamp },
-    process.env.CLOUDINARY_SECRET_KEY
+    params,
+    process.env.CLOUDINARY_API_SECRET
   );
 
-  res.json({
-    signature,
-    timestamp, // Send this timestamp back to the frontend
-  });
+  // Send the signature and timestamp to the frontend
+  res.json({ signature, timestamp });
 };
 
 export { connectCloudinary, getCloudinarySignature };

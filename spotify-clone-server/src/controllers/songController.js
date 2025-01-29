@@ -22,17 +22,17 @@ const addSong = async (req, res) => {
   try {
     const { name, desc, album, signature, timestamp } = req.body;
 
-    // const isValidSignature = validateSignature(
-    //   signature,
-    //   timestamp,
-    //   `name=${name}&desc=${desc}&album=${album}`
-    // );
-    // if (!isValidSignature) {
-    //   return res.json({
-    //     success: false,
-    //     message: ` Invalid signature ${signature + timestamp }`,
-    //   });
-    // }
+    const expectedSignature = cloudinary.utils.api_sign_request(
+      { public_id: name, timestamp },
+      process.env.CLOUDINARY_API_SECRET
+    );
+
+    if (signature !== expectedSignature) {
+      return res.json({
+        success: false,
+        message: `Invalid signature: Received ${signature}, Expected ${expectedSignature}`,
+      });
+    }
 
     const audioFile = req.files?.audio[0];
     const imageFile = req.files?.image[0];

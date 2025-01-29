@@ -13,16 +13,10 @@ const AddSong = () => {
   const [loading, setLoading] = useState(false);
   const [albumData, setAlbumData] = useState([]);
 
-  const getCloudinarySignature = async () => {
-    try {
-      const res = await axios.get(`${url}/api/cloudinary-signature`);
-      console.log("Cloudinary Signature Response:", res.data);
-
-      return res; // Make sure this returns the response
-    } catch (error) {
-      console.error("Error getting Cloudinary signature", error);
-      throw error; // Ensure errors are thrown to be handled in onSubmit
-    }
+  const getCloudinarySignature = async (name) => {
+    const res = await axios.get(`/api/cloudinary-signature?name=${name}`);
+    const data = await res.json();
+    return data;
   };
 
   const onSubmit = async (e) => {
