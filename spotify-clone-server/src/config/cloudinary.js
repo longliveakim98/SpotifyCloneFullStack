@@ -10,12 +10,13 @@ const connectCloudinary = async () => {
 };
 
 const getCloudinarySignature = (req, res) => {
+  const { name } = req.body; // Access the name from the request body
   const timestamp = Math.round(new Date().getTime() / 1000); // Current time in seconds
 
   // Parameters to sign
   const params = {
     timestamp: timestamp,
-    public_id: req.query.name, // Pass the song name as the public_id
+    public_id: name, // Pass the song name as the public_id
   };
 
   // Generate the signature
