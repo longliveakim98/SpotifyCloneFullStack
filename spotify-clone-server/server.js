@@ -19,7 +19,12 @@ connectCloudinary();
 app.use(express.json()); //any request that comes in will be converted/ parsed into json
 app.use(
   cors({
-    origin: "*", // Allow requests only from your frontend
+    origin: [
+      "http://localhost:5174",
+      "http://localhost:5173/",
+      "https://spotify-clone-full-stack-alpha.vercel.app/",
+      "https://spotify-clone-full-stack-mwn2.vercel.app/",
+    ], // Allow requests only from your frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
 
     allowedHeaders: "*",
