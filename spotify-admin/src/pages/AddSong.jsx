@@ -50,6 +50,8 @@ const AddSong = () => {
       formData.append("audio", audio.secure_url);
       formData.append("audioDuration", audio.duration);
 
+      console.log(audio.duration);
+
       formData.append("name", name);
       formData.append("desc", desc);
       formData.append("album", album);
