@@ -13,34 +13,45 @@ const AddSong = () => {
   const [loading, setLoading] = useState(false);
   const [albumData, setAlbumData] = useState([]);
 
-  const getCloudinarySignature = async (name) => {
-    const res = await axios.post(`${url}/api/cloudinary-signature`, { name });
-    const data = await res.data;
-    return data;
+  const cloudName = import.meta.env.VITE_CLOUDINARY_NAME;
+
+  const uploadToCloudinary = async (file, name, resourceType) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("public_id", name);
+      formData.append("upload_preset", "unsigned");
+
+      const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+
+      const response = await axios.post(uploadUrl, formData);
+
+      return response.data;
+    } catch (error) {
+      toast.error("Cloudinary upload failed: " + error.message);
+      return null;
+    }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const resCloud = await getCloudinarySignature(name);
-      console.log(resCloud);
-      const { signature, timestamp } = resCloud;
-
+      const audio = await uploadToCloudinary(songFile, name, "video");
+      const image = await uploadToCloudinary(
+        imageFile,
+        `${name}-cover`,
+        "image"
+      );
+      console.log(image, audio);
       const formData = new FormData();
       formData.append("name", name);
       formData.append("desc", desc);
-      formData.append("image", imageFile);
-      formData.append("audio", songFile);
       formData.append("album", album);
 
-      formData.append("signature", signature);
-      formData.append("timestamp", timestamp);
-      formData.append("upload_preset", "preset");
-
-      const res = await axios.post(`${url}/api/song/add`, formData, {
-        withCredentials: true,
-      });
+      formData.append("image", image.secure_url);
+      formData.append("audio", audio.secure_url);
+      const res = await axios.post(`${url}/api/song/add`, formData);
 
       if (res.data.success) {
         toast.success("Song added successfully");
