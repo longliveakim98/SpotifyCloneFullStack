@@ -23,8 +23,9 @@ app.use(
       "https://spotify-clone-full-stack-mwn2.vercel.app",
       "https://spotify-clone-full-stack-alpha.vercel.app",
     ], // Allow requests only from your frontend
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+
+    allowedHeaders: "*",
     credentials: true,
   })
 ); // allow frontend to make requests to backend, if frontend runs on different port number than backend server then we need to use cors
