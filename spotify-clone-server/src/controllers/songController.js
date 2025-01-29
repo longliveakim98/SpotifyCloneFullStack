@@ -2,31 +2,31 @@ import { v2 as cloudinary } from "cloudinary";
 import songModel from "../models/songModel.js";
 import crypto from "crypto";
 
-const validateSignature = (signature, timestamp, params) => {
-  const secretKey = process.env.CLOUDINARY_API_SECRET; // Ensure you have the correct secret key in your environment variables
+// const validateSignature = (signature, timestamp, params) => {
+//   const secretKey = process.env.CLOUDINARY_API_SECRET; // Ensure you have the correct secret key in your environment variables
 
-  // Recreate the string to sign
-  const stringToSign = `timestamp=${timestamp}${params}`;
+//   // Recreate the string to sign
+//   const stringToSign = `timestamp=${timestamp}${params}`;
 
-  // Generate the expected signature using the Cloudinary secret key
-  const expectedSignature = crypto
-    .createHash("sha1")
-    .update(stringToSign + secretKey)
-    .digest("hex");
+//   // Generate the expected signature using the Cloudinary secret key
+//   const expectedSignature = crypto
+//     .createHash("sha1")
+//     .update(stringToSign + secretKey)
+//     .digest("hex");
 
-  // Compare the expected signature with the signature passed from the frontend
-  return expectedSignature === signature;
-};
+//   // Compare the expected signature with the signature passed from the frontend
+//   return expectedSignature === signature;
+// };
 
 const addSong = async (req, res) => {
   try {
     const { name, desc, album, signature, timestamp } = req.body;
 
-    const isValidSignature = validateSignature(
-      signature,
-      timestamp,
-      `name=${name}&desc=${desc}&album=${album}`
-    );
+    // const isValidSignature = validateSignature(
+    //   signature,
+    //   timestamp,
+    //   `name=${name}&desc=${desc}&album=${album}`
+    // );
     // if (!isValidSignature) {
     //   return res.json({
     //     success: false,
@@ -38,10 +38,12 @@ const addSong = async (req, res) => {
     const imageFile = req.files?.image[0];
 
     const audioUpload = await cloudinary.uploader.upload(audioFile.path, {
+      public_id: `${name}`,
       resource_type: "video",
     });
 
     const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+      public_id: `${name}`,
       resource_type: "image",
     });
 
@@ -61,8 +63,11 @@ const addSong = async (req, res) => {
     const song = new songModel(songData);
     await song.save();
 
+    res.json(songData);
+
     res.json({ success: true, message: "Song add successfully" });
   } catch (err) {
+    res.json(songData);
     res.json({ success: false, message: err.message });
   }
 };
