@@ -63,12 +63,9 @@ const addSong = async (req, res) => {
     const song = new songModel(songData);
     await song.save();
 
-    res.json({ songData });
-
     res.json({ success: true, message: "Song add successfully" });
   } catch (err) {
-    res.json({ songData });
-    res.json({ success: false, message: err.message });
+    res.json({ success: false, message: err.message + `${songData}` });
   }
 };
 
