@@ -24,7 +24,8 @@ const AddSong = () => {
     setLoading(true);
     try {
       const resCloud = await getCloudinarySignature(name);
-      const { signature, timestamp } = resCloud.data;
+      console.log(resCloud);
+      const { signature, timestamp } = resCloud;
 
       const formData = new FormData();
       formData.append("name", name);
