@@ -7,7 +7,7 @@ const addSong = async (req, res) => {
     const duration = await `${Math.floor(audioDuration / 60)}:${Math.floor(
       audioDuration % 60
     )}`;
-    console.log(duration);
+
     const songData = {
       name,
       desc,
