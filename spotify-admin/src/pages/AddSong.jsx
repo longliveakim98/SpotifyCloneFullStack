@@ -43,14 +43,17 @@ const AddSong = () => {
         `${name}-cover`,
         "image"
       );
-      console.log(image, audio);
+
       const formData = new FormData();
+
+      formData.append("image", image.secure_url);
+      formData.append("audio", audio.secure_url);
+      formData.append("audioDuration", audio.duration);
+
       formData.append("name", name);
       formData.append("desc", desc);
       formData.append("album", album);
 
-      formData.append("image", image.secure_url);
-      formData.append("audio", audio.secure_url);
       const res = await axios.post(`${url}/api/song/add`, formData);
 
       if (res.data.success) {

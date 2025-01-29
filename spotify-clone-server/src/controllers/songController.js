@@ -1,36 +1,13 @@
-import { v2 as cloudinary } from "cloudinary";
 import songModel from "../models/songModel.js";
-
-const getAudioDetails = async (publicId) => {
-  const cloudName = "dvnmyljfl"; // Your Cloudinary cloud name
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_SECRET_KEY;
-
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/video/${publicId}`;
-
-  const auth = {
-    username: apiKey,
-    password: apiSecret,
-  };
-
-  try {
-    const response = await axios.get(url, { auth });
-    console.log(response.data);
-  } catch (error) {
-    console.error("Error fetching audio details:", error);
-  }
-};
 
 const addSong = async (req, res) => {
   try {
-    const { name, desc, album, image, audio } = req.body;
+    const { name, desc, album, image, audio, audioDuration } = req.body;
 
-    const audioDetail = getAudioDetails(name);
-
-    const duration = `${Math.floor(audioDetail.duration / 60)}:${Math.floor(
-      audioDetail.duration % 60
+    const duration = await `${Math.floor(audioDuration / 60)}:${Math.floor(
+      audioDuration % 60
     )}`;
-
+    console.log(duration);
     const songData = {
       name,
       desc,
