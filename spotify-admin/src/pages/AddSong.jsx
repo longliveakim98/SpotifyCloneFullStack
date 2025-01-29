@@ -23,7 +23,7 @@ const AddSong = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const resCloud = await getCloudinarySignature();
+      const resCloud = await getCloudinarySignature(name);
       const { signature, timestamp } = resCloud.data;
 
       const formData = new FormData();
