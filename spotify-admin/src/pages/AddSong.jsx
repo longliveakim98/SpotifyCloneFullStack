@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { assets } from "../assets/admin-assets/assets";
 import axios from "axios";
 import { url } from "../App";
@@ -52,10 +52,14 @@ const AddSong = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const audio = await uploadToCloudinary(songFile, name, "video");
+      const audio = await uploadToCloudinary(
+        songFile,
+        `${name}-${Math.round(Date.now() / 1000)}`,
+        "video"
+      );
       const image = await uploadToCloudinary(
         imageFile,
-        `${name}-cover`,
+        `${name}-cover-${Math.round(Date.now() / 1000)}`,
         "image"
       );
 
@@ -64,8 +68,6 @@ const AddSong = () => {
       formData.append("image", image.secure_url);
       formData.append("audio", audio.secure_url);
       formData.append("audioDuration", songDuration);
-
-      console.log(audio.duration);
 
       formData.append("name", name);
       formData.append("desc", desc);
