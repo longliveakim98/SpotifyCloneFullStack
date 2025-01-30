@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { assets } from "../assets/admin-assets/assets";
 import axios from "axios";
 import { url } from "../App";
@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 const AddSong = () => {
   const [imageFile, setImageFile] = useState(false);
   const [songFile, setSongFile] = useState(false);
+  const [songDuration, setSongDuration] = useState(null);
+
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [album, setAlbum] = useState("none");
@@ -14,6 +16,19 @@ const AddSong = () => {
   const [albumData, setAlbumData] = useState([]);
 
   const cloudName = import.meta.env.VITE_CLOUDINARY_NAME;
+
+  const handleSongFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSongFile(file);
+
+      const audio = new Audio();
+      audio.src = URL.createObjectURL(file);
+      audio.addEventListener("loadedmetadata", () => {
+        setSongDuration(audio.duration);
+      });
+    }
+  };
 
   const uploadToCloudinary = async (file, name, resourceType) => {
     try {
@@ -48,7 +63,7 @@ const AddSong = () => {
 
       formData.append("image", image.secure_url);
       formData.append("audio", audio.secure_url);
-      formData.append("audioDuration", audio.duration);
+      formData.append("audioDuration", songDuration);
 
       console.log(audio.duration);
 
@@ -108,7 +123,7 @@ const AddSong = () => {
             type="file"
             id="song"
             accept="audio/*"
-            onChange={(e) => setSongFile(e.target.files[0])}
+            onChange={handleSongFileChange}
             hidden
           />
           <label htmlFor="song">
