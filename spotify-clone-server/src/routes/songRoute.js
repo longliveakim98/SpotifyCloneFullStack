@@ -2,6 +2,7 @@ import {
   addSong,
   listSong,
   removeSong,
+  updatePlayCount,
 } from "../controllers/songController.js";
 import express from "express";
 import upload from "../middleware/multur.js";
@@ -18,5 +19,6 @@ songRouter.post(
 );
 songRouter.get("/list", listSong);
 songRouter.post("/remove", removeSong);
+songRouter.put("/play/:id", updatePlayCount);
 
 export default songRouter;

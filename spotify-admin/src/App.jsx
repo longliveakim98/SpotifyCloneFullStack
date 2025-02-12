@@ -7,6 +7,7 @@ import ListSong from "./pages/ListSong";
 import ListAlbum from "./pages/ListAlbum";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+import ListUsers from "./pages/ListUsers";
 
 export const url = import.meta.env.VITE_BASE_URL;
 
@@ -26,6 +27,7 @@ function App() {
                 <Route path="add-album" element={<AddAlbum />} />
                 <Route path="list-song" element={<ListSong />} />
                 <Route path="list-album" element={<ListAlbum />} />
+                <Route path="list-users" element={<ListUsers />} />
               </Route>
             </Routes>
           </div>

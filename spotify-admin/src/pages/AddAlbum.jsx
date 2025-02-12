@@ -3,14 +3,37 @@ import { assets } from "../assets/admin-assets/assets";
 import axios from "axios";
 import { url } from "../App";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const AddAlbum = () => {
   const [imageFile, setImageFile] = useState(false);
   const [colour, setColour] = useState("#121212");
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
+  const [artistId, setArtistId] = useState("");
+
+  const [artistData, setArtistData] = useState([]);
+  const [query, setQuery] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const [loading, setLoading] = useState(false);
+
+  const searchArtist = async () => {
+    try {
+      const res = await axios.get(`${url}/api/search/artist/?query=${query}`);
+      if (res.status === 200) {
+        setArtistData(res.data.artists);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (query) {
+      searchArtist();
+    }
+  }, [query]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +42,7 @@ const AddAlbum = () => {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("desc", desc);
+      formData.append("artist", artistId);
       formData.append("image", imageFile);
       formData.append("bgColour", colour);
 
@@ -28,6 +52,7 @@ const AddAlbum = () => {
         toast.success("Album added successfully");
         setName("");
         setDesc("");
+        setArtistId("");
         setImageFile(false);
       } else {
         toast.error("Something went wrong" + res.data.message);
@@ -88,6 +113,35 @@ const AddAlbum = () => {
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
         />
+      </div>
+
+      <div className="flex flex-col gap-2.5">
+        <p>Artist</p>
+        <input
+          className="bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[max(40vw,250px)]"
+          type="text"
+          placeholder="Search artist"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setShowDropdown(true)}
+        />
+        {showDropdown && artistData.length > 0 && (
+          <ul className="bg-white border border-gray-400 rounded mt-1 w-[max(40vw,250px)] max-h-40 overflow-y-auto">
+            {artistData?.map((artist) => (
+              <li
+                key={artist._id}
+                className="p-2 hover:bg-gray-200 cursor-pointer"
+                onClick={() => {
+                  setArtistId(artist._id);
+                  setQuery(artist.name);
+                  setShowDropdown(false);
+                }}
+              >
+                {artist.name}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="flex flex-col gap-3 ">

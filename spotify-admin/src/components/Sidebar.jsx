@@ -47,6 +47,13 @@ const Sidebar = () => {
           <img className="w-5" src={assets.album_icon} alt="" />
           <p className="hidden sm:block ">List Album</p>
         </NavLink>
+        <NavLink
+          to={"/list-users"}
+          className="flex items-center gap-2.5 text-gray-800 bg-white border border-black p-2 pr-[max(8vw,10px)] drop-shadow-[-4px_4px_#00FF5B] text-sm font-medium "
+        >
+          <img className="w-5" src={assets.album_icon} alt="" />
+          <p className="hidden sm:block ">List Users</p>
+        </NavLink>
       </div>
     </div>
   );

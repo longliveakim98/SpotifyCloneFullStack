@@ -2,27 +2,21 @@ import mongoose from "mongoose";
 
 const albumSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
+    name: { type: String, required: true },
+    desc: { type: String, required: true },
+    bgColour: { type: String, required: true }, // Background color for album display
+    image: { type: String, required: true }, // Album cover image
+    artist: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-    },
-    desc: {
-      type: String,
-      required: true,
-    },
-    bgColour: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-      required: true,
-    },
+    }, // Album owner
+    songs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Song" }], // Songs inside album
+    isPublic: { type: Boolean, default: false }, // Controls album visibility
   },
   { timestamps: true }
 );
 
-const albumModel =
-  mongoose.models.album || mongoose.model("album", albumSchema);
+const Album = mongoose.models.Album || mongoose.model("Album", albumSchema);
 
-export default albumModel;
+export default Album;

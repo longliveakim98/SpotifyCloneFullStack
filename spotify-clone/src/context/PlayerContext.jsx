@@ -12,9 +12,12 @@ const PlayerContextProvider = (props) => {
 
   const [songsData, setSongsData] = useState([]);
   const [albumsData, setAlbumsData] = useState([]);
-
+  const [artistsData, setArtistsData] = useState([]);
+  const [artistData, setArtistData] = useState([]);
   const [track, setTrack] = useState(songsData[0]);
+  const [playCount, setPlayCount] = useState(track?.playCount || 0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isSongDisplay, setIsSongDisplay] = useState(false);
   const [time, setTime] = useState({
     currentTime: { second: 0, minute: 0 },
     totalTime: { second: 0, minute: 0 },
@@ -32,6 +35,8 @@ const PlayerContextProvider = (props) => {
     await songsData.map((item) => {
       if (id === item._id) {
         setTrack(item);
+        setIsSongDisplay(true);
+        updatePlayCount(item._id);
       }
     });
     await audioRef.current.play();
@@ -82,6 +87,50 @@ const PlayerContextProvider = (props) => {
     }
   };
 
+  const getArtist = async (id) => {
+    try {
+      const res = await axios.get(`${url}/api/artist/detail/${id}`);
+      setArtistData(res.data[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getArtistData = async () => {
+    try {
+      const res = await axios.get(`${url}/api/artist/list`);
+      setArtistsData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updatePlayCount = async (id) => {
+    try {
+      await axios.put(`${url}/api/song/play/${id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getAlbumsByArtist = async (id) => {
+    try {
+      const res = await axios.get(`${url}/api/album/by-artist/?artist=${id}`);
+      const newAlbums = res.data.albums;
+      setAlbumsData((prevAlbums) => {
+        const mergedAlbums = newAlbums.filter(
+          (newAlbum) =>
+            !prevAlbums.some(
+              (existingAlbum) => existingAlbum._id === newAlbum._id
+            )
+        );
+
+        return [...prevAlbums, ...mergedAlbums]; // Merge old and new albums
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => {
       audioRef.current.ontimeupdate = () => {
@@ -105,6 +154,7 @@ const PlayerContextProvider = (props) => {
   useEffect(() => {
     getSongsData();
     getAlbumsData();
+    getArtistData();
   }, []);
 
   const contextValue = {
@@ -125,6 +175,14 @@ const PlayerContextProvider = (props) => {
     seekSong,
     songsData,
     albumsData,
+    setIsSongDisplay,
+    isSongDisplay,
+    artistsData,
+    setArtistsData,
+    getArtist,
+    artistData,
+    getAlbumsByArtist,
+    playCount,
   };
 
   return (

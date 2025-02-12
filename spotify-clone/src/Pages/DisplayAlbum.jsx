@@ -1,5 +1,4 @@
-import Navbar from "./Navbar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { assets } from "../assets/frontend-assets/assets";
 import { useContext } from "react";
 import { PlayerContext } from "../context/PlayerContext";
@@ -10,6 +9,7 @@ const DisplayAlbum = ({ album }) => {
   const { id } = useParams();
   const [albumData, setAlbumData] = useState("");
   const { playWithId, albumsData, songsData } = useContext(PlayerContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     albumsData.map((item) => {
@@ -22,23 +22,28 @@ const DisplayAlbum = ({ album }) => {
 
   return (
     albumData && (
-      <>
-        <Navbar />
-        <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end">
-          <img className="w-48 rounded" src={albumData.image} alt="" />
+      <div className="px-4">
+        <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end ">
+          <img className="w-48 rounded" src={albumData?.image} alt="" />
           <div className="flex flex-col">
-            <p>Playlist</p>
+            <p>Album</p>
             <h2 className="text-5xl font-bold mb-4 md:text-7xl">
-              {albumData.name}
+              {albumData?.name}
             </h2>
-            <h4 className="">{albumData.desc}</h4>
+            <h4 className="">{albumData?.desc}</h4>
             <p className="mt-1">
               <img
-                className="inline-block w-5 mr-6 "
-                src={assets.spotify_logo}
+                className="inline-block w-8 mr-6 rounded-full"
+                src={albumData.artist.image}
                 alt=""
               />
-              <b>Spotify </b>• 1,324,035 likes
+              <b
+                className="cursor-pointer hover:underline"
+                onClick={() => navigate(`/artist/${albumData.artist._id}`)}
+              >
+                {albumData.artist.name}{" "}
+              </b>
+              • 1,324,035 likes
               <b> 50 songs, </b>
               about 2 hr 30 mins
             </p>
@@ -71,7 +76,7 @@ const DisplayAlbum = ({ album }) => {
               <p className="text-[15px] text-center">{song.duration}</p>
             </div>
           ))}
-      </>
+      </div>
     )
   );
 };

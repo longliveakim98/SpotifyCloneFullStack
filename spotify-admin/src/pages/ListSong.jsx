@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { url } from "../App";
 import { toast } from "react-toastify";
+import SongItem from "../components/SongItem";
 
 const ListSong = () => {
   const [data, setData] = useState([]);
@@ -47,21 +48,11 @@ const ListSong = () => {
         </div>
         {data.map((item, i) => {
           return (
-            <div
+            <SongItem
               key={i}
-              className="grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[0.5fr_1fr_2fr_1fr_0.5fr] items-center gap-2.5 p-3 border border-gray-300 text-sm mr-5 "
-            >
-              <img className="w-12" src={item.image} alt="" />
-              <p>{item.name}</p>
-              <p>{item.album}</p>
-              <p>{item.duration}</p>
-              <p
-                className="cursor-pointer"
-                onClick={() => removeSong(item._id)}
-              >
-                x
-              </p>
-            </div>
+              song={item}
+              removeSong={() => removeSong(item._id)}
+            />
           );
         })}
       </div>

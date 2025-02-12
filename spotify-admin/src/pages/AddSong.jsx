@@ -11,9 +11,14 @@ const AddSong = () => {
 
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
-  const [album, setAlbum] = useState("none");
+  const [albumId, setAlbumId] = useState("");
+  const [artistId, setArtistId] = useState("");
   const [loading, setLoading] = useState(false);
   const [albumData, setAlbumData] = useState([]);
+
+  const [artistData, setArtistData] = useState([]);
+  const [query, setQuery] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const cloudName = import.meta.env.VITE_CLOUDINARY_NAME;
 
@@ -71,7 +76,12 @@ const AddSong = () => {
 
       formData.append("name", name);
       formData.append("desc", desc);
-      formData.append("album", album);
+
+      if (albumId) {
+        formData.append("album", albumId);
+      }
+
+      formData.append("artist", artistId);
 
       const res = await axios.post(`${url}/api/song/add`, formData);
 
@@ -79,7 +89,7 @@ const AddSong = () => {
         toast.success("Song added successfully");
         setName("");
         setDesc("");
-        setAlbum("none");
+        setAlbumId("");
         setImageFile(false);
         setSongFile(false);
       } else {
@@ -92,9 +102,24 @@ const AddSong = () => {
     setLoading(false);
   };
 
+  const searchArtist = async () => {
+    try {
+      const res = await axios.get(`${url}/api/search/artist/?query=${query}`);
+      if (res.status === 200) {
+        setArtistData(res.data.artists);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const loadAlbums = async () => {
     try {
-      const res = await axios.get(`${url}/api/album/list`);
+      const res = await axios.get(
+        `${url}/api/album/by-artist?artist=${artistId}`
+      );
+
+      console.log(res);
       if (res.data.success) {
         setAlbumData(res.data.albums);
       } else {
@@ -106,8 +131,16 @@ const AddSong = () => {
   };
 
   useEffect(() => {
-    loadAlbums();
-  }, []);
+    if (artistId) {
+      loadAlbums();
+    }
+  }, [artistId]);
+
+  useEffect(() => {
+    if (query) {
+      searchArtist();
+    }
+  }, [query]);
 
   return loading ? (
     <div className="grid place-items-center min-h-[80vh]">
@@ -182,16 +215,45 @@ const AddSong = () => {
         />
       </div>
 
+      <div className="flex flex-col gap-2.5">
+        <p>Artist</p>
+        <input
+          className="bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[max(40vw,250px)]"
+          type="text"
+          placeholder="Search artist"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setShowDropdown(true)}
+        />
+        {showDropdown && artistData.length > 0 && (
+          <ul className="bg-white border border-gray-400 rounded mt-1 w-[max(40vw,250px)] max-h-40 overflow-y-auto">
+            {artistData?.map((artist) => (
+              <li
+                key={artist._id}
+                className="p-2 hover:bg-gray-200 cursor-pointer"
+                onClick={() => {
+                  setArtistId(artist._id);
+                  setQuery(artist.name);
+                  setShowDropdown(false);
+                }}
+              >
+                {artist.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
       <div className="flex flex-col gap-2.5 ">
         <p>Album</p>
         <select
           className="bg-transparent outline-green-600 border-2 border-gray-400 p-2.5 w-[max(150px)]"
-          defaultValue={album}
-          onChange={(e) => setAlbum(e.target.value)}
+          defaultValue={albumId}
+          onChange={(e) => setAlbumId(e.target.value)}
         >
-          <option value="none">None</option>
+          <option value={""}>None</option>
           {albumData.map((album, i) => (
-            <option key={i} value={album.name}>
+            <option key={i} value={album._id}>
               {album.name}
             </option>
           ))}

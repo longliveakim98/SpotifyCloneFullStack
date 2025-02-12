@@ -1,11 +1,22 @@
 import { v2 as cloudinary } from "cloudinary";
-import albumModel from "../models/albumModel.js";
+import Album from "../models/albumModel.js";
+import User from "../models/userModel.js";
+
+const checkArtistExists = async (artistId) => {
+  const artistExists = await User.exists({ _id: artistId });
+  return !!artistExists; // Returns true if exists, false otherwise
+};
 
 const addAlbum = async (req, res) => {
   try {
-    const name = req.body.name;
-    const desc = req.body.desc;
-    const bgColour = req.body.bgColour;
+    const { name, desc, bgColour, artist } = req.body;
+
+    const checkArtist = await checkArtistExists(artist);
+
+    if (!checkArtist) {
+      return res.json({ success: false, message: "Artist not found" });
+    }
+
     const imageFile = req.file;
     const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
       resource_type: "image",
@@ -15,10 +26,11 @@ const addAlbum = async (req, res) => {
       name,
       desc,
       bgColour,
+      artist,
       image: imageUpload.secure_url,
     };
 
-    const album = albumModel(albumData);
+    const album = Album(albumData);
     await album.save();
     res.json({ success: true, message: "Album added successfully" });
   } catch (err) {
@@ -28,19 +40,41 @@ const addAlbum = async (req, res) => {
 
 const listAlbum = async (req, res) => {
   try {
-    const allAlbums = await albumModel.find({});
+    const allAlbums = await Album.find({}).populate("artist", "name image");
     res.json({ success: true, albums: allAlbums });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }
 };
+
 const removeAlbum = async (req, res) => {
   try {
-    await albumModel.findByIdAndDelete(req.body.id);
+    await Album.findByIdAndDelete(req.body.id);
     res.json({ success: true, message: "Album removed successfully" });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }
 };
 
-export { addAlbum, listAlbum, removeAlbum };
+const getAlbumsByArtist = async (req, res) => {
+  try {
+    const { artist } = req.query; // Get artistId from query parameters
+
+    if (!artist) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Artist ID is required" });
+    }
+
+    const albums = await Album.find({ artist: artist }).populate(
+      "artist",
+      "name image"
+    );
+
+    res.json({ success: true, albums });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export { addAlbum, listAlbum, removeAlbum, getAlbumsByArtist };

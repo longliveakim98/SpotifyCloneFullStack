@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import DisplayHome from "./DisplayHome";
-import DisplayAlbum from "./DisplayAlbum";
+import DisplayHome from "../Pages/DisplayHome";
+import DisplayAlbum from "../Pages/DisplayAlbum";
 
 import { useContext } from "react";
 import { PlayerContext } from "../context/PlayerContext";
+import Search from "../Pages/Search";
+import DisplayArtist from "../Pages/DisplayArtist";
 
 const Display = () => {
   const { albumsData } = useContext(PlayerContext);
@@ -29,7 +31,7 @@ const Display = () => {
   return (
     <div
       ref={displayRef}
-      className="w-[100%] m-2 px-6 pt-4 lg:h-full rounded bg-[#121212] text-white overflow-auto lg:w-[75%] lg:ml-0"
+      className="w-[100%] m-2 lg:h-full rounded bg-[#121212] text-white overflow-auto mx-0 "
     >
       {albumsData.length > 0 && (
         <Routes>
@@ -40,6 +42,8 @@ const Display = () => {
               <DisplayAlbum album={albumsData.find((x) => x._id === albumId)} />
             }
           />
+          <Route path="/search" element={<Search />} />
+          <Route path="/artist/:id" element={<DisplayArtist />} />
         </Routes>
       )}
     </div>
