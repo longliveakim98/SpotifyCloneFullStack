@@ -12,7 +12,7 @@ import PlaylistAlbumItem from "../components/ui/PlaylistAlbumItem";
 import PlaylistArtistItem from "../components/ui/PlaylistArtistItem";
 import PlaylistSongItem from "../components/ui/PlaylistSongItem";
 import { SearchContext } from "../context/SearchContext";
-import RowContainers from "../components/ui/rowContainers";
+import RowContainers from "../components/ui/RowContainers";
 import Popover from "../components/ui/Popover";
 import Modal from "../components/ui/Modal";
 import axios from "axios";

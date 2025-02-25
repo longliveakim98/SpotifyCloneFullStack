@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { PlayerContext } from "../context/PlayerContext";
 import { assets } from "../assets/frontend-assets/assets";
 import Popover from "./ui/Popover";
-import RowContainers from "./ui/rowContainers";
+import RowContainers from "./ui/RowContainers";
 import axios from "axios";
 import { sortColorsByBrightness } from "../utils/sortColorsByBrightness";
 import useColorThief from "use-color-thief";
