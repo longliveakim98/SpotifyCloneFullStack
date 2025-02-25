@@ -28,6 +28,7 @@ app.use(
       "http://localhost:5173",
       "https://spotify-clone-full-stack-alpha.vercel.app",
       "https://spotify-clone-full-stack-mwn2.vercel.app",
+      "https://spotify-clone-full-stack-k3rsgvil2-longliveakim98s-projects.vercel.app",
     ], // Allow requests only from your frontend
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 
