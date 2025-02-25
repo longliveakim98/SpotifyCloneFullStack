@@ -10,6 +10,10 @@ import DisplaySong from "./components/DisplaySong";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 
+import FloatingPlayer from "./components/ui/FloatingPlayer";
+
+export const url = import.meta.env.VITE_BASE_URL;
+
 function App() {
   const PlayerLayout = () => {
     const { audioRef, track, songsData, isSongDisplay } =
@@ -23,12 +27,20 @@ function App() {
 
         {songsData.length !== 0 ? (
           <>
-            <div className="h-[84%] flex pt-2 px-2 ">
+            <div className="h-[94%] lg:h-[90%] xl:h-[84%] flex pt-2 lg:px-4 ">
               <Sidebar />
               <Display />
-              {isSongDisplay && <DisplaySong />}
+              <div
+                className={`hidden xl:block ${
+                  isSongDisplay ? "xl:w-[35%]" : ""
+                } `}
+              >
+                {isSongDisplay && <DisplaySong />}
+              </div>
             </div>
+
             <Player />
+            <FloatingPlayer />
           </>
         ) : null}
 

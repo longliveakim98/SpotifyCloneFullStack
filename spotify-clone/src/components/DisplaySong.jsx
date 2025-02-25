@@ -6,6 +6,8 @@ import RowContainers from "./ui/rowContainers";
 import axios from "axios";
 import { sortColorsByBrightness } from "../utils/sortColorsByBrightness";
 import useColorThief from "use-color-thief";
+import { useLocation } from "react-router-dom";
+import SongPagePlayer from "./ui/songPagePlayer";
 
 const items = [
   { iconClass: "fa-solid fa-plus", label: "Add to your Liked Songs" },
@@ -13,8 +15,10 @@ const items = [
   { iconClass: "fa-regular fa-compact-disc", label: "Go to album" },
 ];
 
-const DisplaySong = () => {
-  const { setIsSongDisplay, track } = useContext(PlayerContext);
+const DisplaySong = ({ withPlayer }) => {
+  const location = useLocation().pathname;
+
+  const { setIsSongDisplay, track, isOpen } = useContext(PlayerContext);
 
   const url = import.meta.env.VITE_BASE_URL;
   const [artist, setArtist] = useState("");
@@ -39,7 +43,9 @@ const DisplaySong = () => {
 
   return (
     <div
-      className="h-full flex-col text-white hidden lg:flex m-2 w-[35%] rounded-sm px-3 "
+      className={`h-full flex-col text-white w-full ${
+        location === "/song" ? "" : "hidden"
+      } ${isOpen ? "opacity-30" : ""}  lg:flex lg:m-2  rounded-sm px-3 py-1`}
       style={{
         backgroundImage: `linear-gradient( ${
           bgColor?.[1] || "#121212"
@@ -67,7 +73,7 @@ const DisplaySong = () => {
             contentClass="-left-20 top-10"
           />
           <button
-            className="p-2 hover:bg-[#ffffff1a] rounded-full cursor-pointer"
+            className="p-2 hover:bg-[#ffffff1a] rounded-full cursor-pointer sm:block hidden"
             onClick={() => setIsSongDisplay(false)}
           >
             <img src={assets.plus_icon} alt="" className="rotate-45 size-5" />
@@ -75,16 +81,21 @@ const DisplaySong = () => {
         </div>
       </div>
       <div className="h-full flex flex-col overflow-y-auto gap-4">
-        <img
-          src={track?.image}
-          alt=""
-          className="rounded-lg min-w-[20rem] h-[25rem]"
-        />
+        <div className="flex items-center justify-center ">
+          <img
+            src={track?.image}
+            alt=""
+            className="rounded-lg min-w-[20rem]  min-h-[20rem] shadow-lg shadow-black"
+          />
+        </div>
         <div>
           <p className="text-3xl font-bold">{track?.name}</p>
           <p className="text-xl text-[rgb(179,179,179)] font-medium">
             {track?.album ? track?.artist : artist}
           </p>
+        </div>
+        <div className="block xl:hidden">
+          {withPlayer && <SongPagePlayer />}
         </div>
         <div className="bg-[#1E1E1E] p-3 rounded-md flex flex-col gap-4">
           <b className="font-semibold text-lg">Credits</b>

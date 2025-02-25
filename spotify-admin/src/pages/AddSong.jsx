@@ -119,7 +119,6 @@ const AddSong = () => {
         `${url}/api/album/by-artist?artist=${artistId}`
       );
 
-      console.log(res);
       if (res.data.success) {
         setAlbumData(res.data.albums);
       } else {

@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { PlayerContext } from "../context/PlayerContext";
 import { useState } from "react";
 import { useEffect } from "react";
+import SongRow from "../components/SongRow";
 
 const DisplayAlbum = ({ album }) => {
   const { id } = useParams();
@@ -17,20 +18,28 @@ const DisplayAlbum = ({ album }) => {
         setAlbumData(item);
       }
     });
-    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     albumData && (
-      <div className="px-4">
-        <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end ">
-          <img className="w-48 rounded" src={albumData?.image} alt="" />
+      <div
+        className="h-full "
+        style={{
+          backgroundImage: `linear-gradient( ${
+            album?.bgColour || "#121212"
+          } ,#121212,#121212`,
+        }}
+      >
+        <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end px-4 ">
+          <div className="flex items-center justify-center sm:items-start sm:h-50 ">
+            <img className="w-48 rounded " src={albumData?.image} alt="" />
+          </div>
           <div className="flex flex-col">
             <p>Album</p>
-            <h2 className="text-5xl font-bold mb-4 md:text-7xl">
+            <h2 className="text-3xl font-bold mb-4 md:text-7xl">
               {albumData?.name}
             </h2>
-            <h4 className="">{albumData?.desc}</h4>
+            <h4 className="hidden">{albumData?.desc}</h4>
             <p className="mt-1">
               <img
                 className="inline-block w-8 mr-6 rounded-full"
@@ -41,41 +50,36 @@ const DisplayAlbum = ({ album }) => {
                 className="cursor-pointer hover:underline"
                 onClick={() => navigate(`/artist/${albumData.artist._id}`)}
               >
-                {albumData.artist.name}{" "}
+                {albumData.artist.name}
               </b>
-              • 1,324,035 likes
-              <b> 50 songs, </b>
-              about 2 hr 30 mins
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-3 sm:grid-cols-4 mt-10 mb-4 pl-2 text-[#a7a7a7]">
-          <p>
-            <b className="mr-4">#</b>Title
-          </p>
-          <p>Album</p>
-          <p className="hidden sm:block">Date Added</p>
-          <img className="m-auto w-4" src={assets.clock_icon} alt="" />
-        </div>
-        <hr />
-        {songsData
-          .filter((item) => item.album === album.name)
-          .map((song, i) => (
-            <div
-              onClick={() => playWithId(song._id)}
-              key={i}
-              className="grid grid-cols-3 sm:grid-cols-4 gap-2 p-2 items-center text-[#a7a7a7] hover:bg-[#ffffff2b] cursor-pointer"
-            >
-              <p className="text-white ">
-                <b className="mr-4 text-[#a7a7a7]">{i + 1}</b>
-                <img className="inline w-10 mr-5" src={song.image} alt="" />
-                {song.name}
-              </p>
-              <p className="text-[15px]">{albumData.name}</p>
-              <p className="text-[15px] hidden sm:block">5 days ago</p>
-              <p className="text-[15px] text-center">{song.duration}</p>
+        <div className="h-100 w-full mt-4 sm:mt-0">
+          <div className="hidden sm:grid grid-cols-6 gap-4 items-center mt-1 px-4 mb-2 text-gray-400 text-sm">
+            <div className="col-span-3 flex gap-4 items-center ">
+              <p>#</p>
+              <p>Title</p>
             </div>
-          ))}
+            <p className="col-span-2 text-center ">Plays</p>
+            <div className="col-span-1 flex justify-center">
+              <img className="w-3" src={assets.clock_icon} alt="" />
+            </div>
+          </div>
+          <hr />
+          {songsData
+            .filter((item) => item.album === album.name)
+            .map((song, i) => (
+              <div
+                onClick={() => playWithId(song._id)}
+                key={i}
+                className="flex w-full "
+              >
+                <p className="text"></p>
+                <SongRow song={song} number={i + 1} />
+              </div>
+            ))}
+        </div>
       </div>
     )
   );

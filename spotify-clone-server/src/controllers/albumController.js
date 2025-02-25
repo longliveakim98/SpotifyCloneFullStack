@@ -49,7 +49,35 @@ const listAlbum = async (req, res) => {
 
 const removeAlbum = async (req, res) => {
   try {
+    const album = await Album.findById(req.body.id);
+
+    if (!album) {
+      return res.json({ success: false, message: "Album not found" });
+    }
+
+    // Extract public_id from the Cloudinary URL
+    const getPublicId = (url) => {
+      const parts = url.split("/");
+      const filename = parts[parts.length - 1].split(".")[0]; // Extracts file name
+      return decodeURIComponent(filename); // Decode spaces (%20) into actual spaces
+    };
+
+    const imagePublicId = getPublicId(album.image);
+
+    // Delete the album image from Cloudinary
+    const imageDeleteResponse = await cloudinary.uploader.destroy(
+      imagePublicId,
+      {
+        type: "upload",
+        resource_type: "image",
+      }
+    );
+
+    console.log("Album Image Delete Response:", imageDeleteResponse);
+
+    // Delete the album from the database
     await Album.findByIdAndDelete(req.body.id);
+
     res.json({ success: true, message: "Album removed successfully" });
   } catch (err) {
     res.json({ success: false, message: err.message });
@@ -66,10 +94,10 @@ const getAlbumsByArtist = async (req, res) => {
         .json({ success: false, message: "Artist ID is required" });
     }
 
-    const albums = await Album.find({ artist: artist }).populate(
-      "artist",
-      "name image"
-    );
+    const albums = await Album.find(
+      { artist: artist },
+      "artist name image"
+    ).populate("artist", "name image");
 
     res.json({ success: true, albums });
   } catch (err) {

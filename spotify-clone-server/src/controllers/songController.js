@@ -31,9 +31,9 @@ const addSong = async (req, res) => {
       return res.json({ success: false, message: "Artist not found" });
     }
 
-    const duration = await `${Math.floor(audioDuration / 60)}:${Math.floor(
-      audioDuration % 60
-    )}`;
+    const duration = `${Math.floor(audioDuration / 60)}:${String(
+      Math.floor(audioDuration % 60)
+    ).padStart(2, "0")}`;
 
     const songData = {
       name,
@@ -102,7 +102,7 @@ const listSong = async (req, res) => {
 
 const removeSong = async (req, res) => {
   try {
-    const song = await songModel.findById(req.body.id);
+    const song = await Song.findById(req.body.id);
 
     if (!song) {
       return res.json({ success: false, message: "Song not found" });
@@ -165,4 +165,59 @@ const updatePlayCount = async (req, res) => {
   }
 };
 
-export { addSong, listSong, removeSong, updatePlayCount };
+const getSongsByAlbum = async (req, res) => {
+  try {
+    const { albumId } = req.query;
+    if (!albumId) {
+      return res.json({ success: false, message: "Album ID is required" });
+    }
+
+    const songs = await Song.find({ album: albumId })
+      .populate("artist", "name")
+      .populate("album", "name");
+    // Populate the owner with selected fields
+
+    if (!songs) {
+      return res.json({
+        success: false,
+        message: "No songs acquired from Album",
+      });
+    }
+
+    res.json({ success: true, songs });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
+
+const getSongsByArtist = async (req, res) => {
+  try {
+    const { artistId } = req.query;
+    if (!artistId) {
+      return res.json({ success: false, message: "Artist ID is required" });
+    }
+
+    const songs = await Song.find({ artist: artistId }).populate("artist");
+    // Populate the owner with selected fields
+
+    if (!songs) {
+      return res.json({
+        success: false,
+        message: "No songs acquired from artist",
+      });
+    }
+
+    res.json({ success: true, songs });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
+
+export {
+  addSong,
+  listSong,
+  removeSong,
+  updatePlayCount,
+  getSongsByAlbum,
+  getSongsByArtist,
+};

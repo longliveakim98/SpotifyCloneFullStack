@@ -15,7 +15,9 @@ export const searchMusic = async (req, res) => {
       $or: [
         { name: { $regex: query, $options: "i" } }, // Song name
       ],
-    }).populate("artist", "name image username"); // Get artist details (name, image)
+    })
+      .populate("artist", "name image username")
+      .populate("album", "name"); // Get artist details (name, image)
 
     // Search for albums
     const albums = await Album.find({

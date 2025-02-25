@@ -1,5 +1,7 @@
 import {
   addSong,
+  getSongsByAlbum,
+  getSongsByArtist,
   listSong,
   removeSong,
   updatePlayCount,
@@ -18,6 +20,8 @@ songRouter.post(
   addSong
 );
 songRouter.get("/list", listSong);
+songRouter.get("/get-album-songs", getSongsByAlbum);
+songRouter.get("/get-artist-songs", getSongsByArtist);
 songRouter.post("/remove", removeSong);
 songRouter.put("/play/:id", updatePlayCount);
 

@@ -12,6 +12,7 @@ import authRouter from "./src/routes/authRouter.js";
 import { searchMusic } from "./src/controllers/Search.js";
 import searchRouter from "./src/routes/searchRoute.js";
 import artistRouter from "./src/routes/artistRoute.js";
+import playlistRoute from "./src/routes/playlistRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -28,7 +29,7 @@ app.use(
       "https://spotify-clone-full-stack-alpha.vercel.app",
       "https://spotify-clone-full-stack-mwn2.vercel.app",
     ], // Allow requests only from your frontend
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 
     allowedHeaders: "*",
   })
@@ -42,6 +43,7 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/artist", artistRouter);
 app.use("/api/search", searchRouter);
+app.use("/api/playlist", playlistRoute);
 
 app.get("/", (req, res) => res.send("API WORKING"));
 

@@ -7,6 +7,8 @@ import { useContext } from "react";
 import { PlayerContext } from "../context/PlayerContext";
 import Search from "../Pages/Search";
 import DisplayArtist from "../Pages/DisplayArtist";
+import DisplaySong from "./DisplaySong";
+import DisplayPlaylist from "../Pages/DisplayPlaylist";
 
 const Display = () => {
   const { albumsData } = useContext(PlayerContext);
@@ -31,7 +33,7 @@ const Display = () => {
   return (
     <div
       ref={displayRef}
-      className="w-[100%] m-2 lg:h-full rounded bg-[#121212] text-white overflow-auto mx-0 "
+      className="w-[100%] mt-2 mb-10 sm:mb-2 lg:h-full rounded bg-[#121212] text-white overflow-y-auto mx-0  "
     >
       {albumsData.length > 0 && (
         <Routes>
@@ -44,6 +46,8 @@ const Display = () => {
           />
           <Route path="/search" element={<Search />} />
           <Route path="/artist/:id" element={<DisplayArtist />} />
+          <Route path="/song" element={<DisplaySong withPlayer />} />
+          <Route path="/playlist/:id" element={<DisplayPlaylist />} />
         </Routes>
       )}
     </div>

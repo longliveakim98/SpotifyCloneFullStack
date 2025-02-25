@@ -22,7 +22,6 @@ const AuthProvider = ({ children }) => {
         setUser(null); // Prevent crashing
       }
     }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getUser = async (id) => {
