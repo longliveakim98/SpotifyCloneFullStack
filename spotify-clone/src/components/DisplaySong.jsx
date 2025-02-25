@@ -7,8 +7,8 @@ import axios from "axios";
 import { sortColorsByBrightness } from "../utils/sortColorsByBrightness";
 import useColorThief from "use-color-thief";
 import { useLocation } from "react-router-dom";
-import SongPagePlayer from "./ui/songPagePlayer";
-
+import SongPagePlayer from "./ui/SongPagePlayer";
+//
 const items = [
   { iconClass: "fa-solid fa-plus", label: "Add to your Liked Songs" },
   { iconClass: "fa-regular fa-user", label: "Go to artist" },
