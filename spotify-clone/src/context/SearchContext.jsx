@@ -19,7 +19,10 @@ const SearchContextProvider = (props) => {
   const [artist, setArtist] = useState(null);
   const [albums, setAlbums] = useState([]);
 
+  const [loading, setLoading] = useState(false);
+
   const getAlbumSongs = async (album) => {
+    setLoading(true);
     try {
       const { data } = await axios.get(
         `${url}/api/song/get-album-songs/?albumId=${album?._id}`
@@ -33,12 +36,15 @@ const SearchContextProvider = (props) => {
           (song) => !prev.some((existingSong) => existingSong._id === song._id)
         ),
       ]);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
   const getArtistSongs = async (artistId) => {
+    setLoading(true);
     try {
       const { data } = await axios.get(
         `${url}/api/song/get-artist-songs/?artistId=${artistId}`
@@ -54,12 +60,15 @@ const SearchContextProvider = (props) => {
           (song) => !prev.some((existingSong) => existingSong._id === song._id)
         ),
       ]);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
   const getAlbumsByArtist = async (id) => {
+    setLoading(true);
     try {
       const res = await axios.get(`${url}/api/album/by-artist/?artist=${id}`);
       const newAlbums = res.data.albums;
@@ -75,11 +84,13 @@ const SearchContextProvider = (props) => {
       });
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const search = async (query) => {
+      setLoading(true);
       try {
         const { data } = await axios.get(
           `${url}/api/search/all/?query=${query}`
@@ -105,8 +116,10 @@ const SearchContextProvider = (props) => {
 
           return [...prevAlbums, ...mergedAlbums];
         });
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
       if (!query) {
         setResults({
@@ -133,6 +146,7 @@ const SearchContextProvider = (props) => {
     songs,
     artist,
     albums,
+    loading,
   };
   return (
     <SearchContext.Provider value={contextValue}>

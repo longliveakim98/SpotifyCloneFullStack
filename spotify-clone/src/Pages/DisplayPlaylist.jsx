@@ -40,6 +40,7 @@ const DisplayPlaylist = () => {
     artist,
     albums,
     getAlbumsByArtist,
+    loading,
   } = useContext(SearchContext);
 
   const [formImage, setFormImage] = useState(false);
@@ -278,94 +279,70 @@ const DisplayPlaylist = () => {
             />
           </div>
           {/* Results */}
-          <div>
-            {searchPage === "all" && (
-              <div className="flex flex-col">
-                {results.songs.length > 0 &&
-                  results.songs.map((song, i) => {
-                    const isAdded = playlistSongs.some(
-                      (s) => s._id === song._id
-                    );
-                    return (
-                      <PlaylistSongItem
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <div className="w-12 h-12 border-4 border-t-transparent border-green-500 rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <div>
+              {searchPage === "all" && (
+                <div className="flex flex-col">
+                  {results.songs.length > 0 &&
+                    results.songs.map((song, i) => {
+                      const isAdded = playlistSongs.some(
+                        (s) => s._id === song._id
+                      );
+                      return (
+                        <PlaylistSongItem
+                          key={i}
+                          song={song}
+                          isAdded={isAdded}
+                          playlistId={playlistData._id}
+                        />
+                      );
+                    })}
+                  {results.albums.length > 0 &&
+                    results.albums.map((album, i) => (
+                      <PlaylistAlbumItem
+                        album={album}
                         key={i}
-                        song={song}
-                        isAdded={isAdded}
-                        playlistId={playlistData._id}
+                        onClick={() => {
+                          getAlbumSongs(album);
+                          setSearchPage("album");
+                        }}
                       />
-                    );
-                  })}
-                {results.albums.length > 0 &&
-                  results.albums.map((album, i) => (
-                    <PlaylistAlbumItem
-                      album={album}
-                      key={i}
-                      onClick={() => {
-                        getAlbumSongs(album);
-                        setSearchPage("album");
-                      }}
-                    />
-                  ))}
-                {results.artists.length > 0 &&
-                  results.artists.map((artist, i) => (
-                    <PlaylistArtistItem
-                      artist={artist}
-                      key={i}
-                      onClick={() => {
-                        getArtistSongs(artist._id);
-                        getAlbumsByArtist(artist._id);
-                        setSearchPage("artist");
-                      }}
-                    />
-                  ))}
-              </div>
-            )}
-            {searchPage === "album" && (
-              <div className="min-h-[50vh] flex flex-col mt-2 ">
-                <div className="flex gap-2 px-4 items-center mb-2">
-                  <div
-                    onClick={() => {
-                      isFromArtist
-                        ? setSearchPage("artist")
-                        : setSearchPage("all");
-                    }}
-                    className="cursor-pointer hover:bg-[#1e1e1e] p-2 rounded-full"
-                  >
-                    <img src={assets.arrow_left} className="w-4" alt="" />
-                  </div>
-                  <p className="ml-2">{album?.name}</p>
-                </div>
-                {songs
-                  ?.filter((song) => song.album?._id === album?._id)
-                  .map((song, i) => {
-                    const isAdded = playlistSongs.some(
-                      (s) => s._id === song._id
-                    );
-                    return (
-                      <PlaylistSongItem
+                    ))}
+                  {results.artists.length > 0 &&
+                    results.artists.map((artist, i) => (
+                      <PlaylistArtistItem
+                        artist={artist}
                         key={i}
-                        song={song}
-                        isAdded={isAdded}
-                        playlistId={playlistData._id}
+                        onClick={() => {
+                          getArtistSongs(artist._id);
+                          getAlbumsByArtist(artist._id);
+                          setSearchPage("artist");
+                        }}
                       />
-                    );
-                  })}
-              </div>
-            )}
-            {searchPage === "artist" && (
-              <div className="min-h-[50vh] flex flex-col mt-2 ">
-                <div className="flex gap-2 px-4 items-center mb-2">
-                  <div
-                    onClick={() => setSearchPage("all")}
-                    className="cursor-pointer"
-                  >
-                    <img src={assets.arrow_left} className="w-4" alt="" />
-                  </div>
-                  <p className="ml-2">{artist?.name}</p>
+                    ))}
                 </div>
-                {songs?.length > 0 &&
-                  songs
-                    ?.filter((song) => song.artist._id === artist?._id)
+              )}
+              {searchPage === "album" && (
+                <div className="min-h-[50vh] flex flex-col mt-2 ">
+                  <div className="flex gap-2 px-4 items-center mb-2">
+                    <div
+                      onClick={() => {
+                        isFromArtist
+                          ? setSearchPage("artist")
+                          : setSearchPage("all");
+                      }}
+                      className="cursor-pointer hover:bg-[#1e1e1e] p-2 rounded-full"
+                    >
+                      <img src={assets.arrow_left} className="w-4" alt="" />
+                    </div>
+                    <p className="ml-2">{album?.name}</p>
+                  </div>
+                  {songs
+                    ?.filter((song) => song.album?._id === album?._id)
                     .map((song, i) => {
                       const isAdded = playlistSongs.some(
                         (s) => s._id === song._id
@@ -379,26 +356,56 @@ const DisplayPlaylist = () => {
                         />
                       );
                     })}
-                {albums?.length > 0 &&
-                  albums
-                    ?.filter((album) => album.artist._id === artist?._id)
-                    .map((album, i) => {
-                      return (
-                        <PlaylistAlbumItem
-                          key={i}
-                          album={album}
-                          playlistId={playlistData._id}
-                          onClick={() => {
-                            getAlbumSongs(album);
-                            setIsFromArtist(true);
-                            setSearchPage("album");
-                          }}
-                        />
-                      );
-                    })}
-              </div>
-            )}
-          </div>
+                </div>
+              )}
+              {searchPage === "artist" && (
+                <div className="min-h-[50vh] flex flex-col mt-2 ">
+                  <div className="flex gap-2 px-4 items-center mb-2">
+                    <div
+                      onClick={() => setSearchPage("all")}
+                      className="cursor-pointer"
+                    >
+                      <img src={assets.arrow_left} className="w-4" alt="" />
+                    </div>
+                    <p className="ml-2">{artist?.name}</p>
+                  </div>
+                  {songs?.length > 0 &&
+                    songs
+                      ?.filter((song) => song.artist._id === artist?._id)
+                      .map((song, i) => {
+                        const isAdded = playlistSongs.some(
+                          (s) => s._id === song._id
+                        );
+                        return (
+                          <PlaylistSongItem
+                            key={i}
+                            song={song}
+                            isAdded={isAdded}
+                            playlistId={playlistData._id}
+                          />
+                        );
+                      })}
+                  {albums?.length > 0 &&
+                    albums
+                      ?.filter((album) => album.artist._id === artist?._id)
+                      .map((album, i) => {
+                        return (
+                          <PlaylistAlbumItem
+                            key={i}
+                            album={album}
+                            playlistId={playlistData._id}
+                            onClick={() => {
+                              getAlbumSongs(album);
+                              setIsFromArtist(true);
+                              setSearchPage("album");
+                            }}
+                          />
+                        );
+                      })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <Modal isOpen={isOpen}>
