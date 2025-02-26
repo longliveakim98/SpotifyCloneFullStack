@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { PlayerContext } from "../context/PlayerContext";
 import { assets } from "../assets/frontend-assets/assets";
 import Popover from "./ui/Popover";
 import RowContainers from "./ui/RowContainers";
-import axios from "axios";
+
 import { sortColorsByBrightness } from "../utils/sortColorsByBrightness";
 import useColorThief from "use-color-thief";
 import { useLocation } from "react-router-dom";
@@ -20,9 +20,6 @@ const DisplaySong = ({ withPlayer }) => {
 
   const { setIsSongDisplay, track, isOpen } = useContext(PlayerContext);
 
-  const url = import.meta.env.VITE_BASE_URL;
-  const [artist, setArtist] = useState("");
-
   const { palette } = useColorThief(track?.image, {
     format: "hex",
     colorCount: 3,
@@ -30,16 +27,6 @@ const DisplaySong = ({ withPlayer }) => {
   });
 
   const bgColor = sortColorsByBrightness(palette);
-
-  const getArtistName = async () => {
-    const artist = await axios.get(`${url}/api/user/user/${track.artist}`);
-    setArtist(artist.data.name);
-  };
-  useEffect(() => {
-    if (!track.album) {
-      getArtistName();
-    }
-  }, [track]);
 
   return (
     <div
@@ -91,7 +78,7 @@ const DisplaySong = ({ withPlayer }) => {
         <div>
           <p className="text-3xl font-bold">{track?.name}</p>
           <p className="text-xl text-[rgb(179,179,179)] font-medium">
-            {track?.album ? track?.artist : artist}
+            {track?.artist?.name}
           </p>
         </div>
         <div className="block xl:hidden">
@@ -100,9 +87,7 @@ const DisplaySong = ({ withPlayer }) => {
         <div className="bg-[#1E1E1E] p-3 rounded-md flex flex-col gap-4">
           <b className="font-semibold text-lg">Credits</b>
           <div className="">
-            <p className="text-xl font-semibold">
-              {track?.album ? track?.artist : artist}
-            </p>
+            <p className="text-xl font-semibold">{track?.artist?.name}</p>
             <p className="text-[rgb(179,179,179)] font-semibold">Main Artist</p>
           </div>
         </div>

@@ -18,6 +18,8 @@ const PlayerContextProvider = (props) => {
   const [artistData, setArtistData] = useState([]);
   const [track, setTrack] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   const [userPlaylists, setUserPlaylists] = useState([]);
   const [playlistData, setPlaylistData] = useState(null);
   const [playlistSongs, setPlaylistSongs] = useState([]);
@@ -62,12 +64,30 @@ const PlayerContextProvider = (props) => {
   };
   const next = async () => {
     songsData.map(async (item, i) => {
-      if (track._id === item._id && i < songsData.length) {
+      if (track._id === item._id && i < songsData.length - 1) {
         await setTrack(songsData[i + 1]);
         await audioRef.current.play();
         setIsPlaying(true);
       }
     });
+  };
+
+  const playNextSong = async () => {
+    const currentIndex = songsData.findIndex((item) => item._id === track._id);
+
+    if (currentIndex < songsData.length - 1) {
+      const nextTrack = songsData[currentIndex + 1];
+
+      setTrack(nextTrack); // Update the track state
+
+      // Wait for the audio source to load before playing
+      audioRef.current.onloadeddata = () => {
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch((error) => console.log("Playback failed", error));
+      };
+    }
   };
 
   const seekSong = async (e) => {
@@ -80,7 +100,7 @@ const PlayerContextProvider = (props) => {
     try {
       const res = await axios.get(`${url}/api/song/list`);
       setSongsData(res.data.songs);
-      setTrack(res.data.songs[0]);
+      // setTrack(res.data.songs[0]);
     } catch (err) {
       console.log(err);
     }
@@ -281,6 +301,7 @@ const PlayerContextProvider = (props) => {
     isOpen,
     setIsOpen,
     setPlaylistData,
+    playNextSong,
   };
 
   return (

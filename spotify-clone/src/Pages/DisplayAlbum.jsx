@@ -68,7 +68,7 @@ const DisplayAlbum = ({ album }) => {
           </div>
           <hr />
           {songsData
-            .filter((item) => item.album === album.name)
+            .filter((item) => item.album?.name === album.name)
             .map((song, i) => (
               <div
                 onClick={() => playWithId(song._id)}

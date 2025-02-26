@@ -8,12 +8,12 @@ const SongRow = ({ song, number, onImage }) => {
   const [isPlayingThis, setIsPlayingThis] = useState(false);
 
   useEffect(() => {
-    if (track._id === song._id) {
+    if (track?._id === song._id) {
       setIsPlayingThis(true);
     } else {
       setIsPlayingThis(false);
     }
-  }, [track._id, song._id]);
+  }, [track?._id, song._id]);
 
   if (!song) return null;
   return (

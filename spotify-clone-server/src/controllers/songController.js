@@ -56,45 +56,12 @@ const addSong = async (req, res) => {
 
 const listSong = async (req, res) => {
   try {
-    const allSongs = await Song.find({}).populate({
-      path: "album",
-      select: "name artist",
-      populate: { path: "artist", select: "name" }, // Fetch artist name
-    });
+    const allSongs = await Song.find({})
+      .populate("album", "name image")
+      .populate("artist", "name image")
+      .sort({ playCount: -1 });
 
-    const formattedSongs = allSongs.map(
-      ({
-        _id,
-        name,
-        desc,
-        artist,
-        album,
-        file,
-        image,
-        isPublic,
-        likesCount,
-        duration,
-        createdAt,
-        playCount,
-      }) => ({
-        _id,
-        name,
-        desc,
-        artistId: album?.artist?._id,
-        artist: album?.artist?.name || artist, // Handle missing artist
-        album: album?.name,
-        albumId: album?._id,
-        file,
-        image,
-        isPublic,
-        likesCount,
-        duration,
-        createdAt,
-        playCount,
-      })
-    );
-
-    res.json({ sucess: true, songs: formattedSongs });
+    res.json({ sucess: true, songs: allSongs });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }

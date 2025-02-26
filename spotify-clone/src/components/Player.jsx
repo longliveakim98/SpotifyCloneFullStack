@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { assets } from "../assets/frontend-assets/assets";
 import { PlayerContext } from "../context/PlayerContext";
-import axios from "axios";
 
 const Player = () => {
   const {
@@ -17,27 +16,13 @@ const Player = () => {
     seekSong,
   } = useContext(PlayerContext);
 
-  const url = import.meta.env.VITE_BASE_URL;
-  const [artist, setArtist] = useState("");
-
-  const getArtistName = async () => {
-    const artist = await axios.get(`${url}/api/user/user/${track.artist}`);
-    setArtist(artist.data.name);
-  };
-  useEffect(() => {
-    if (!track.album) {
-      getArtistName();
-    }
-  }, [track]);
   return track ? (
     <div className="h-[10%] bg-black hidden xl:flex justify-between items-center text-white px-4 ">
-      <div className="hidden lg:flex items-center gap-4">
+      <div className="hidden lg:flex items-center gap-4 px-4">
         <img className="w-12 " src={track.image} alt="" />
         <div>
           <p className="text-lg font-semibold">{track.name}</p>
-          <p className="text-sm text-gray-400">
-            {track.album ? track.artist : artist}
-          </p>
+          <p className="text-sm text-gray-400">{track?.artist?.name}</p>
         </div>
       </div>
       <div className="flex flex-col items-center gap-1 m-auto">
@@ -113,7 +98,9 @@ const Player = () => {
         <img className="w-4" src={assets.zoom_icon} alt="" />
       </div>
     </div>
-  ) : null;
+  ) : (
+    <div className=""></div>
+  );
 };
 
 export default Player;

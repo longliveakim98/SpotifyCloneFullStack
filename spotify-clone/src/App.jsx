@@ -16,7 +16,7 @@ export const url = import.meta.env.VITE_BASE_URL;
 
 function App() {
   const PlayerLayout = () => {
-    const { audioRef, track, songsData, isSongDisplay } =
+    const { audioRef, track, songsData, isSongDisplay, playNextSong } =
       useContext(PlayerContext);
 
     return (
@@ -25,9 +25,13 @@ function App() {
           <Navbar />
         </div>
 
-        {songsData.length !== 0 ? (
+        {songsData?.length !== 0 ? (
           <>
-            <div className="h-[94%] lg:h-[90%] xl:h-[84%] flex pt-2 lg:px-4 ">
+            <div
+              className={`h-[94%] lg:h-[90%] ${
+                track ? "xl:h-[84%]" : "xl:h-[92%]"
+              } flex pt-2 lg:px-4`}
+            >
               <Sidebar />
               <Display />
               <div
@@ -48,6 +52,7 @@ function App() {
           ref={audioRef}
           src={track ? track.file : ""}
           preload="auto"
+          onEnded={playNextSong}
         ></audio>
       </div>
     );

@@ -139,6 +139,7 @@ const SearchContextProvider = (props) => {
     query,
     setQuery,
     results,
+    setResults,
     getArtistSongs,
     getAlbumSongs,
     getAlbumsByArtist,

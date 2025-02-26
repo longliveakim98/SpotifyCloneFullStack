@@ -41,6 +41,7 @@ const DisplayPlaylist = () => {
     albums,
     getAlbumsByArtist,
     loading,
+    setResults,
   } = useContext(SearchContext);
 
   const [formImage, setFormImage] = useState(false);
@@ -118,6 +119,13 @@ const DisplayPlaylist = () => {
     if (params.id) {
       getPlaylist(params.id);
     }
+    setSearchPage("all");
+    setResults({
+      songs: [],
+      albums: [],
+      artists: [],
+    });
+    setQuery("");
   }, [params.id]);
 
   useEffect(() => {
@@ -249,12 +257,22 @@ const DisplayPlaylist = () => {
             <hr className="text-gray-700 mt-2" />
           </div>
           <div>
-            {playlistSongs?.length > 0 &&
+            {playlistSongs?.length > 0 ? (
               playlistSongs
                 .slice(0, 6)
                 .map((song, i) => (
                   <SongRow key={i} song={song} onImage number={i + 1} />
-                ))}
+                ))
+            ) : (
+              <div className="flex flex-col justify-center items-center h-[20vh] ">
+                <p className="text-3xl font-bold  text-gray-400 ">
+                  Add a song to the playlist
+                </p>
+                <p className="text-xl font-bold  text-gray-400 italic">
+                  You can use the search bar below
+                </p>
+              </div>
+            )}
           </div>
         </div>
         <div className="bg-[#121212] ">
@@ -284,7 +302,7 @@ const DisplayPlaylist = () => {
               <div className="w-12 h-12 border-4 border-t-transparent border-green-500 rounded-full animate-spin"></div>
             </div>
           ) : (
-            <div>
+            <div className="mb-10">
               {searchPage === "all" && (
                 <div className="flex flex-col">
                   {results.songs.length > 0 &&
@@ -501,7 +519,7 @@ const DisplayPlaylist = () => {
                 />
 
                 <textarea
-                  value={formDesc}
+                  value={formDesc || ""}
                   className="p-2 bg-[#3A3A3A] w-[80vw] sm:w-full resize-none rounded-md"
                   placeholder="Description"
                   rows={5}
