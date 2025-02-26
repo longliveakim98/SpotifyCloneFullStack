@@ -134,7 +134,12 @@ const Search = () => {
               <Header>Albums</Header>
               <div className="flex overflow-auto ">
                 {results.albums?.map((album) => (
-                  <AlbumItem key={album._id} {...album} id={album._id} />
+                  <AlbumItem
+                    key={album._id}
+                    {...album}
+                    id={album._id}
+                    className="min-w-[180px] w-[230px]"
+                  />
                 ))}
               </div>
             </div>
