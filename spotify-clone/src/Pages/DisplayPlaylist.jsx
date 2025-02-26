@@ -212,7 +212,7 @@ const DisplayPlaylist = () => {
                   ) : (
                     <img
                       className="inline-block w-8 mr-6 rounded-full"
-                      src={assets.plus_icon}
+                      src={playlistData?.owner.image}
                       alt=""
                     />
                   )}

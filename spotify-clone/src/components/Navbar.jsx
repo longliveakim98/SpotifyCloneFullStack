@@ -9,7 +9,7 @@ import SearchBar from "./ui/SearchBar";
 const Navbar = () => {
   const { user, userDetail, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  console.log(userDetail);
   return (
     <>
       <div className="w-full flex justify-between items-center py-1.5 semi-bold px-5">
@@ -91,9 +91,18 @@ const Navbar = () => {
                   </p>
                 </div>
               }
-              icon={userDetail?.name?.slice(0, 1)}
+              icon={
+                userDetail?.image ? (
+                  <img
+                    src={userDetail.image}
+                    className="w-[2.5rem] rounded-full "
+                  />
+                ) : (
+                  userDetail?.name?.slice(0, 1)
+                )
+              }
               contentClass="top-10 -left-10 w-48"
-              iconClass="bg-purple-500"
+              iconClass={userDetail?.image ? "" : "bg-purple-500"}
             />
           )}
         </div>

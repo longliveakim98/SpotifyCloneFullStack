@@ -155,7 +155,7 @@ const ListUsers = () => {
                   {item.image ? (
                     <img className="w-12" src={item.image} alt="" />
                   ) : (
-                    <div className="w-[2rem] h-[2rem] bg-green-500 rounded flex items-center justify-center">
+                    <div className="w-[3rem] h-[3rem] bg-green-500 rounded flex items-center justify-center">
                       <p className="font-bold">{item.name.slice(0, 1)}</p>
                     </div>
                   )}
