@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { url } from "../App";
 import { toast } from "react-toastify";
+import * as motion from "motion/react-client";
 
 const ListAlbum = () => {
   const [data, setData] = useState([]);
@@ -49,8 +50,11 @@ const ListAlbum = () => {
         </div>
         {data.map((item, i) => {
           return (
-            <div
+            <motion.div
               key={i}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
+              transition={{ delay: 0.025 * i, duration: 0.2 * i }}
               className="grid grid-cols-[1fr_1fr_1fr] sm:grid-cols-[0.5fr_1fr_2fr_1fr_0.5fr] items-center gap-2.5 p-3 border border-gray-300 text-sm mr-5"
             >
               <img src={item.image} className="w-12" alt="" />
@@ -58,12 +62,12 @@ const ListAlbum = () => {
               <p>{item.desc}</p>
               <input type="color" value={item.bgColour} readOnly />
               <p
-                className="cursor-pointer"
+                className="cursor-pointer py-2 px-1 bg-red-800 text-center text-white hover:opacity-75 hover:scale-105 rounded-full"
                 onClick={() => removeAlbum(item._id)}
               >
-                x
+                Delete
               </p>
-            </div>
+            </motion.div>
           );
         })}
       </div>

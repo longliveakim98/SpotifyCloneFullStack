@@ -141,11 +141,26 @@ const addSongToPlaylist = async (req, res) => {
     //   playlist.image = song.image;
     // }
 
+    if (!playlist.image && song.image) {
+      const uploadResponse = await cloudinary.uploader.upload(song.image, {
+        folder: "playlist_covers", // Change folder name as needed
+        public_id: `playlist_${playlistId}_cover`,
+        overwrite: true,
+      });
+
+      playlist.image = uploadResponse.secure_url; // Set the new image URL
+    }
+
     // Add the song to the playlist
     playlist.songs.push(songId);
     await playlist.save();
 
-    res.json({ success: true, message: "Song added to playlist", song });
+    res.json({
+      success: true,
+      message: "Song added to playlist",
+      song,
+      playlist,
+    });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }

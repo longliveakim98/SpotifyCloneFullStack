@@ -180,7 +180,7 @@ const ListUsers = () => {
                     {!(edit.userId === item._id && edit.allowed) ? (
                       <div className="flex gap-2">
                         <button
-                          className="cursor-pointer py-2 px-4  bg-slate-400 font-semibold rounded-md "
+                          className="cursor-pointer py-2 px-4  bg-slate-400 font-semibold rounded-full opacity-85 hover:opacity-100 hover:scale-105 "
                           onClick={() => {
                             setEdit((prev) => ({
                               ...prev,
@@ -193,7 +193,7 @@ const ListUsers = () => {
                           Edit
                         </button>
                         <button
-                          className="cursor-pointer py-2 px-4  bg-yellow-400 font-semibold rounded-md "
+                          className="cursor-pointer py-2 px-4  bg-yellow-400 font-semibold rounded-full opacity-85 hover:opacity-100 hover:scale-105 "
                           onClick={() => handleDetails(item._id)}
                         >
                           Details
@@ -202,7 +202,7 @@ const ListUsers = () => {
                     ) : (
                       <div className="flex gap-2">
                         <button
-                          className="cursor-pointer py-2 px-4 bg-red-500 text-white font-semibold rounded-md "
+                          className="cursor-pointer py-2 px-4 bg-red-800 text-white font-semibold rounded-full opacity-85 hover:opacity-100 hover:scale-105  "
                           onClick={() => {
                             setEdit((prev) => ({
                               ...prev,
@@ -215,7 +215,7 @@ const ListUsers = () => {
                           Cancel
                         </button>
                         <button
-                          className="cursor-pointer py-2 px-4  bg-slate-400 font-semibold rounded-md "
+                          className="cursor-pointer py-2 px-4  bg-slate-400 font-semibold rounded-full opacity-85 hover:opacity-100  hover:scale-105 "
                           onClick={() => editRole(edit.userId, edit.role)}
                         >
                           Save

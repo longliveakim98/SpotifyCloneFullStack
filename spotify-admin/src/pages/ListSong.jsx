@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { url } from "../App";
 import { toast } from "react-toastify";
 import SongItem from "../components/SongItem";
+import * as motion from "motion/react-client";
 
 const ListSong = () => {
   const [data, setData] = useState([]);
@@ -35,7 +36,7 @@ const ListSong = () => {
     fetchSongs();
   }, []);
   return (
-    <div>
+    <motion.div>
       <p>All Songs List</p>
       <br />
       <div>
@@ -50,13 +51,14 @@ const ListSong = () => {
           return (
             <SongItem
               key={i}
+              i={i}
               song={item}
               removeSong={() => removeSong(item._id)}
             />
           );
         })}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

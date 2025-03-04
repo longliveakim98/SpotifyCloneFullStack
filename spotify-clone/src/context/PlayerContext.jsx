@@ -191,6 +191,13 @@ const PlayerContextProvider = (props) => {
 
       if (res.data.success) {
         setPlaylistSongs((prevSongs) => [...prevSongs, res.data.song]);
+        setUserPlaylists((prev) =>
+          prev.map((playlist) =>
+            playlist._id === playlistId && !playlist.image
+              ? { ...playlist, image: res.data.song.image }
+              : playlist
+          )
+        );
       }
     } catch (err) {
       console.log(err);

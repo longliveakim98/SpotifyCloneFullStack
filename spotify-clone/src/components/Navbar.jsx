@@ -9,7 +9,7 @@ import SearchBar from "./ui/SearchBar";
 const Navbar = () => {
   const { user, userDetail, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log(userDetail);
+
   return (
     <>
       <div className="w-full flex justify-between items-center py-1.5 semi-bold px-5">

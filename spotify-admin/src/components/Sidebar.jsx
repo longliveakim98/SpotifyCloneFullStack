@@ -1,10 +1,42 @@
-import React from "react";
 import { assets } from "../assets/admin-assets/assets";
 import { NavLink } from "react-router-dom";
+import * as motion from "motion/react-client";
 
 const Sidebar = () => {
   return (
-    <div className="bg-[#003A10] min-h-screen pl-[4vw]">
+    <motion.div
+      initial={{
+        background: "linear-gradient(to center right, #003A10 , #168D40)",
+      }}
+      animate={{
+        background: [
+          "linear-gradient(to bottom right, #003A10 , #168D40)",
+          "linear-gradient(to bottom left, #003A10 , #168D40)",
+          "linear-gradient(to top left, #003A10 , #168D40)",
+          "linear-gradient(to top right, #003A10 , #168D40)",
+        ],
+      }}
+      transition={{
+        duration: 20,
+        repeat: Infinity,
+        repeatType: "loop",
+        ease: "easeInOut",
+      }}
+      className=" min-h-screen relative pl-[4vw] "
+    >
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 0.5, 1] }}
+        transition={{
+          duration: 40,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        style={{
+          background: "linear-gradient(to bottom right, #003A10 , #168D40)",
+        }}
+      ></motion.div>
       <img
         className="mt-5 w-[max(10vw,100px)] hidden sm:block"
         src={assets.logo}
@@ -55,7 +87,7 @@ const Sidebar = () => {
           <p className="hidden sm:block ">List Users</p>
         </NavLink>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

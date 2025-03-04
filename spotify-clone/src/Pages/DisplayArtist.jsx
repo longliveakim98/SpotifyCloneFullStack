@@ -20,7 +20,6 @@ const DisplayArtist = () => {
   });
 
   const albums = albumsData?.filter((album) => album.artist._id === params?.id);
-  console.log(albums);
 
   const sortedColors = sortColorsByBrightness(palette);
   useEffect(() => {
